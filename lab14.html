@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="lab14.css">
+</head>
+<body>
+    <div class="container">
+        <h2 id="my-username">hello, hi</h2>
+
+        <div class="profile" id="my-img-url">
+            <div class="notify"><p>1</p></div>
+        </div>
+
+        <br>
+        <div>
+            <label for="">Set Username</label><input class="input" type="text" id="username" placeholder="Enter Username"><button class="set-button" onclick="display()">SET</button>
+        </div>
+        <br>
+        <div>
+            <label for="">Set image URL</label><input class="input" type="text" id="img-url" placeholder="Enter Image URL"><button class="set-button" onclick="setImage()">SET</button>
+        </div>
+        <h3>Phone Number List</h3>
+        <div class="tel-input-container">
+            <input type="text" placeholder="Name" class="input" id="phone-list-name">
+            <input type="tel" placeholder="Tel" class="input" id="phone-list-tel">
+            <button class="set-button" id="add-btn" onclick="updateRow()">ADD</button>
+            <button class="set-button" id="export" >EXPORT</button>
+        </div>
+        <table class="tel-table" id="table">
+            <tr>
+                <th>No.</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        let count = 0;
+        var phonenumber = [];
+        const addBtn = document.getElementById("add-btn");
+        const saveButton = document.getElementById("export");
+        console.log(saveButton.value)
+
+        function display(){
+            document.getElementById("my-username").innerHTML = document.getElementById("username").value + "'s Phone Book"
+            document.getElementById("username").value = "";
+        };
+        function setImage(){
+            document.getElementById("my-img-url").style.backgroundImage = "url(" + document.getElementById("img-url").value + ")";
+            document.getElementById("img-url").value = "";
+        };
+        function updateRow(){
+            count += 1;
+            const row = document.createElement("tr");
+            const cellNo = document.createElement("td");
+            const cellName = document.createElement("td");
+            const cellTel = document.createElement("td");
+            cellNo.textContent = count;
+            cellName.textContent = document.getElementById("phone-list-name").value;
+            cellTel.textContent = document.getElementById("phone-list-tel").value;
+            row.appendChild(cellNo);
+            row.appendChild(cellName);
+            row.appendChild(cellTel);
+            const table = document.getElementById("table");
+            table.appendChild(row);
+
+            let arr = [];
+            arr.push(count);
+            arr.push(document.getElementById("phone-list-name").value);
+            arr.push(document.getElementById("phone-list-tel").value);
+            phonenumber.push(arr);
+            console.log(phonenumber);
+
+            document.getElementById("phone-list-name").value = "";
+            document.getElementById("phone-list-tel").value = "";
+        };
+
+    saveButton.addEventListener("click", () => {
+        const csvContent = phonenumber.map(row => row.join(",")).join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "data.csv");
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+    
+    </script>
+</body>
+</html>
